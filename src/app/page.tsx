@@ -109,9 +109,6 @@ export default function Home() {
 
       <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 sm:gap-8">
         <header className="space-y-3 text-center sm:space-y-4">
-          <p className="inline-flex rounded-full border border-[#f5d000]/70 bg-[#0a0d18] px-3 py-1 text-xs tracking-[0.2em] text-[#f5d000] sm:px-4 sm:text-sm">
-            STAR WARS DATABASE
-          </p>
           <h1 className="text-3xl font-extrabold uppercase tracking-[0.14em] text-[#f5d000] sm:text-4xl sm:tracking-[0.16em] md:text-5xl md:tracking-[0.18em]">
             Generador Aleatorio de Personajes
           </h1>
@@ -121,15 +118,13 @@ export default function Home() {
         </header>
 
         <div className="w-full min-w-0 space-y-4">
-          <div className="rounded-2xl border border-[#1f2937]/90 bg-[#05070d]/90 p-2.5 sm:p-3">
-            <button
-              type="button"
-              onClick={() => router.push("/characters")}
-              className="w-full rounded-2xl border border-[#1f8dff] bg-[#0b1226] px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:shadow-[0_0_28px_rgba(31,141,255,0.55)] disabled:cursor-not-allowed disabled:opacity-55 sm:px-6 sm:text-base"
-            >
-              Buscar Personaje Manualmente
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => router.push("/characters")}
+            className="w-full cursor-pointer rounded-2xl border border-[#1f8dff] bg-[#0b1226] px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:shadow-[0_0_28px_rgba(31,141,255,0.55)] disabled:cursor-not-allowed disabled:opacity-55 sm:px-6 sm:text-base"
+          >
+            Buscar Personaje Manualmente
+          </button>
 
           <div className="flex flex-col items-center gap-3 pt-1">
             <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#cbd5e1]">o</span>
@@ -137,7 +132,7 @@ export default function Home() {
               type="button"
               onClick={handleGenerateCharacter}
               disabled={isLoading || characters.length === 0}
-              className="w-full rounded-2xl border-2 border-[#f5d000] bg-[#090b14] px-4 py-3 text-base font-bold uppercase tracking-[0.14em] text-[#f5d000] shadow-[0_0_20px_rgba(245,208,0,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(245,208,0,0.55)] disabled:cursor-not-allowed disabled:opacity-55 sm:px-6 sm:py-4 sm:text-lg"
+              className="w-full cursor-pointer rounded-2xl border-2 border-[#f5d000] bg-[#090b14] px-4 py-3 text-base font-bold uppercase tracking-[0.14em] text-[#f5d000] shadow-[0_0_20px_rgba(245,208,0,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(245,208,0,0.55)] disabled:cursor-not-allowed disabled:opacity-55 sm:px-6 sm:py-4 sm:text-lg"
             >
               Generar Personaje
             </button>
@@ -174,17 +169,14 @@ export default function Home() {
 
               <div>
                 <h2 className="mb-3 text-center text-2xl font-bold text-[#f5d000] sm:text-left sm:text-3xl">{selectedCharacter.name}</h2>
-                <div className="grid gap-2.5 sm:grid-cols-2">
+                <dl className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
                   {characterStats.map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-xl border border-[#ff3b3b]/45 bg-[#0a1020] p-2.5"
-                    >
-                      <p className="text-xs uppercase tracking-[0.12em] text-[#93c5fd]">{item.label}</p>
-                      <p className="mt-1 text-base text-[#f8fafc]">{item.value}</p>
+                    <div key={item.label} className="border-b border-[#1f8dff]/25 py-2.5">
+                      <dt className="text-xs uppercase tracking-[0.12em] text-[#93c5fd]">{item.label}</dt>
+                      <dd className="mt-1 text-base text-[#f8fafc]">{item.value}</dd>
                     </div>
                   ))}
-                </div>
+                </dl>
                 {selectedCharacter?.wiki && (
                   <div className="mt-4 flex justify-center sm:justify-end">
                     <a

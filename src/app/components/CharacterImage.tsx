@@ -71,7 +71,7 @@ export default function CharacterImage({
       {showFallback ? (
         <div className={fallbackClassName}>
           <span className="px-4 text-center text-sm font-semibold uppercase tracking-[0.08em] text-[#f87171] sm:text-base">
-            Imagen no disponible. Error de la base de datos
+            Imagen no disponible
           </span>
         </div>
       ) : null}
