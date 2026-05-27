@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const MIN_IMAGE_WIDTH = 220;
 const MIN_IMAGE_HEIGHT = 220;
@@ -45,11 +45,9 @@ export default function CharacterImage({
   fallbackClassName,
   loading = "lazy",
 }: CharacterImageProps) {
-  const [showFallback, setShowFallback] = useState(!src);
-
-  useEffect(() => {
-    setShowFallback(!src);
-  }, [src]);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const [invalidSrc, setInvalidSrc] = useState<string | null>(null);
+  const showFallback = !src || failedSrc === src || invalidSrc === src;
 
   return (
     <div className={containerClassName}>
@@ -61,10 +59,10 @@ export default function CharacterImage({
           loading={loading}
           decoding="async"
           referrerPolicy="no-referrer"
-          onError={() => setShowFallback(true)}
+          onError={() => setFailedSrc(src)}
           onLoad={(event) => {
             if (shouldUseFallback(event.currentTarget)) {
-              setShowFallback(true);
+              setInvalidSrc(src);
             }
           }}
         />
@@ -73,7 +71,7 @@ export default function CharacterImage({
       {showFallback ? (
         <div className={fallbackClassName}>
           <span className="px-4 text-center text-sm font-semibold uppercase tracking-[0.08em] text-[#f87171] sm:text-base">
-            Imagen no disponible. Error de la base de datos
+            Imagen no disponible
           </span>
         </div>
       ) : null}

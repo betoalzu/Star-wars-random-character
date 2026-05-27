@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="relative border-t border-[#1f8dff]/45 bg-gradient-to-b from-[#060a16] to-[#05070d] px-6 py-6 text-[#dbeafe] md:px-10">
+    <footer className="relative border-t border-[#1f8dff]/45 bg-gradient-to-b from-[#060a16] to-[#05070d] px-4 py-6 text-[#dbeafe] sm:px-6 lg:px-10">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f5d000]/70 to-transparent" />
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

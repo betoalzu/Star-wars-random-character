@@ -103,47 +103,42 @@ export default function Home() {
   }, [selectedCharacter]);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#05070d] px-6 py-14 text-[#f5d000] md:px-10">
+    <main className="relative min-h-screen overflow-hidden bg-[#05070d] px-4 py-10 text-[#f5d000] sm:px-6 sm:py-12 lg:px-10 lg:py-14">
       <div className="pointer-events-none absolute -left-20 top-16 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(0,132,255,0.45),_transparent_70%)]" />
       <div className="pointer-events-none absolute -right-24 bottom-12 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(255,36,36,0.45),_transparent_70%)]" />
 
-      <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-8">
-        <header className="space-y-4 text-center">
-          <p className="inline-flex rounded-full border border-[#f5d000]/70 bg-[#0a0d18] px-4 py-1 text-sm tracking-[0.2em] text-[#f5d000]">
-            STAR WARS DATABASE
-          </p>
-          <h1 className="text-4xl font-extrabold uppercase tracking-[0.18em] text-[#f5d000] sm:text-5xl">
+      <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 sm:gap-8">
+        <header className="space-y-3 text-center sm:space-y-4">
+          <h1 className="text-3xl font-extrabold uppercase tracking-[0.14em] text-[#f5d000] sm:text-4xl sm:tracking-[0.16em] md:text-5xl md:tracking-[0.18em]">
             Generador Aleatorio de Personajes
           </h1>
-          <p className="mx-auto max-w-2xl text-base text-[#e5e7eb] sm:text-lg">
+          <p className="mx-auto max-w-2xl text-sm text-[#e5e7eb] sm:text-base md:text-lg">
             Presiona el boton para revelar un personaje al azar de la galaxia.
           </p>
         </header>
 
         <div className="w-full min-w-0 space-y-4">
-          <div className="rounded-2xl border border-[#1f2937]/90 bg-[#05070d]/90 p-3">
+          <button
+            type="button"
+            onClick={() => router.push("/characters")}
+            className="w-full cursor-pointer rounded-2xl border border-[#1f8dff] bg-[#0b1226] px-4 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:shadow-[0_0_28px_rgba(31,141,255,0.55)] disabled:cursor-not-allowed disabled:opacity-55 sm:px-6 sm:text-base"
+          >
+            Buscar Personaje Manualmente
+          </button>
+
+          <div className="flex flex-col items-center gap-3 pt-1">
+            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#cbd5e1]">o</span>
             <button
               type="button"
-              onClick={() => router.push("/characters")}
-              className="w-full rounded-2xl border border-[#1f8dff] bg-[#0b1226] px-6 py-3 text-base font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:shadow-[0_0_28px_rgba(31,141,255,0.55)] disabled:cursor-not-allowed disabled:opacity-55"
+              onClick={handleGenerateCharacter}
+              disabled={isLoading || characters.length === 0}
+              className="w-full cursor-pointer rounded-2xl border-2 border-[#f5d000] bg-[#090b14] px-4 py-3 text-base font-bold uppercase tracking-[0.14em] text-[#f5d000] shadow-[0_0_20px_rgba(245,208,0,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(245,208,0,0.55)] disabled:cursor-not-allowed disabled:opacity-55 sm:px-6 sm:py-4 sm:text-lg"
             >
-              Buscar Personaje Manualmente
+              Generar Personaje
             </button>
           </div>
 
-            <div className="flex flex-col items-center gap-3 pt-1">
-              <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#cbd5e1]">o</span>
-              <button
-                type="button"
-                onClick={handleGenerateCharacter}
-                disabled={isLoading || characters.length === 0}
-                className="w-full rounded-2xl border-2 border-[#f5d000] bg-[#090b14] px-6 py-4 text-lg font-bold uppercase tracking-[0.15em] text-[#f5d000] shadow-[0_0_20px_rgba(245,208,0,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(245,208,0,0.55)] disabled:cursor-not-allowed disabled:opacity-55"
-              >
-                Generar Personaje
-              </button>
-            </div>
-
-            <article className="w-full min-w-0 rounded-3xl border border-[#f5d000]/60 bg-gradient-to-br from-[#090d19] via-[#070a13] to-[#101727] p-5 shadow-[0_0_35px_rgba(0,0,0,0.45)] sm:p-6">
+          <article className="w-full min-w-0 rounded-3xl border border-[#f5d000]/60 bg-gradient-to-br from-[#090d19] via-[#070a13] to-[#101727] p-4 shadow-[0_0_35px_rgba(0,0,0,0.45)] sm:p-6">
           {isLoading ? (
             <p className="text-center text-lg text-[#f8fafc]">Cargando personajes...</p>
           ) : null}
@@ -168,30 +163,27 @@ export default function Home() {
                 alt={selectedCharacter.name}
                 name={selectedCharacter.name}
                 containerClassName="overflow-hidden rounded-2xl border border-[#1f8dff]/70 bg-[#0a0f1f]"
-                imageClassName="block h-64 w-full object-cover md:h-72"
-                fallbackClassName="flex h-64 flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8] md:h-72"
+                imageClassName="block h-56 w-full object-contain object-top p-2 sm:h-64 sm:object-cover sm:p-0 md:h-72"
+                fallbackClassName="flex h-56 flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8] sm:h-64 md:h-72"
               />
 
               <div>
-                <h2 className="mb-3 text-3xl font-bold text-[#f5d000]">{selectedCharacter.name}</h2>
-                <div className="grid gap-2.5 sm:grid-cols-2">
+                <h2 className="mb-3 text-center text-2xl font-bold text-[#f5d000] sm:text-left sm:text-3xl">{selectedCharacter.name}</h2>
+                <dl className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
                   {characterStats.map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-xl border border-[#ff3b3b]/45 bg-[#0a1020] p-2.5"
-                    >
-                      <p className="text-xs uppercase tracking-[0.12em] text-[#93c5fd]">{item.label}</p>
-                      <p className="mt-1 text-base text-[#f8fafc]">{item.value}</p>
+                    <div key={item.label} className="border-b border-[#1f8dff]/25 py-2.5">
+                      <dt className="text-xs uppercase tracking-[0.12em] text-[#93c5fd]">{item.label}</dt>
+                      <dd className="mt-1 text-base text-[#f8fafc]">{item.value}</dd>
                     </div>
                   ))}
-                </div>
+                </dl>
                 {selectedCharacter?.wiki && (
-                  <div className="flex justify-end mt-4">
+                  <div className="mt-4 flex justify-center sm:justify-end">
                     <a
                       href={selectedCharacter.wiki}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl border border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35]"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] sm:w-auto"
                     >
                       Ver en Wiki
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
