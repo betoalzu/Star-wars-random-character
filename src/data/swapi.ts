@@ -14,6 +14,7 @@ export type Character = {
   species?: string;
   image?: string;
   affiliations?: string[];
+  wiki?: string;
 };
 
 export function toBirthYear(value?: number): string {
