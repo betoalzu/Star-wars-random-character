@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getCharacterById } from "@/data/swapi";
+import { getCharacterById, toBirthYear } from "@/data/swapi";
 
 type CharacterDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -23,6 +24,18 @@ export default async function CharacterDetailPage({
         <h1 className="mt-2 text-3xl font-bold tracking-tight">{character.name}</h1>
       </header>
 
+      {character.image ? (
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <Image
+            src={character.image}
+            alt={character.name}
+            width={1200}
+            height={800}
+            className="h-64 w-full object-cover object-top"
+          />
+        </section>
+      ) : null}
+
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <dl className="grid grid-cols-1 gap-4 text-slate-700 sm:grid-cols-2">
           <div>
@@ -31,35 +44,51 @@ export default async function CharacterDetailPage({
           </div>
           <div>
             <dt className="text-sm text-slate-500">Genero</dt>
-            <dd className="font-medium">{character.gender}</dd>
+              <dd className="font-medium">{character.gender ?? "unknown"}</dd>
           </div>
           <div>
             <dt className="text-sm text-slate-500">Nacimiento</dt>
-            <dd className="font-medium">{character.birth_year}</dd>
+              <dd className="font-medium">{toBirthYear(character.born)}</dd>
+          </div>
+          <div>
+            <dt className="text-sm text-slate-500">Especie</dt>
+              <dd className="font-medium">{character.species ?? "unknown"}</dd>
+          </div>
+          <div>
+            <dt className="text-sm text-slate-500">Planeta</dt>
+              <dd className="font-medium">{character.homeworld ?? "unknown"}</dd>
           </div>
           <div>
             <dt className="text-sm text-slate-500">Altura</dt>
-            <dd className="font-medium">{character.height}</dd>
+              <dd className="font-medium">
+                {typeof character.height === "number" ? `${character.height} m` : "unknown"}
+              </dd>
           </div>
           <div>
             <dt className="text-sm text-slate-500">Peso</dt>
-            <dd className="font-medium">{character.mass}</dd>
+              <dd className="font-medium">
+                {typeof character.mass === "number" ? `${character.mass} kg` : "unknown"}
+              </dd>
           </div>
           <div>
             <dt className="text-sm text-slate-500">Color de ojos</dt>
-            <dd className="font-medium">{character.eye_color}</dd>
+              <dd className="font-medium">{character.eyeColor ?? "unknown"}</dd>
           </div>
           <div>
             <dt className="text-sm text-slate-500">Color de cabello</dt>
-            <dd className="font-medium">{character.hair_color}</dd>
+              <dd className="font-medium">{character.hairColor ?? "unknown"}</dd>
           </div>
           <div>
-            <dt className="text-sm text-slate-500">Films</dt>
-            <dd className="font-medium">{character.films.length}</dd>
+            <dt className="text-sm text-slate-500">Afiliaciones</dt>
+              <dd className="font-medium">
+                {character.affiliations && character.affiliations.length > 0
+                  ? character.affiliations.join(", ")
+                  : "unknown"}
+              </dd>
           </div>
           <div>
-            <dt className="text-sm text-slate-500">Vehiculos</dt>
-            <dd className="font-medium">{character.vehicles.length}</dd>
+            <dt className="text-sm text-slate-500">Color de piel</dt>
+              <dd className="font-medium">{character.skinColor ?? "unknown"}</dd>
           </div>
         </dl>
       </section>

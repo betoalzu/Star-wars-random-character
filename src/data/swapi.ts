@@ -1,61 +1,58 @@
-const SWAPI_BASE_URL = "https://swapi.info/api";
+const STAR_WARS_API_URL = "https://akabab.github.io/starwars-api/api/all.json";
 
-export type SwapiCharacter = {
+export type Character = {
+  id: number;
   name: string;
-  height: string;
-  mass: string;
-  hair_color: string;
-  skin_color: string;
-  eye_color: string;
-  birth_year: string;
-  gender: string;
-  homeworld: string;
-  films: string[];
-  species: string[];
-  vehicles: string[];
-  starships: string[];
-  created: string;
-  edited: string;
-  url: string;
+  height?: number;
+  mass?: number;
+  hairColor?: string;
+  skinColor?: string;
+  eyeColor?: string;
+  born?: number;
+  gender?: string;
+  homeworld?: string;
+  species?: string;
+  image?: string;
+  affiliations?: string[];
 };
 
-function buildUrl(path: string) {
-  return `${SWAPI_BASE_URL}${path}`;
+export function toBirthYear(value?: number): string {
+  if (typeof value !== "number") {
+    return "unknown";
+  }
+
+  if (value < 0) {
+    return `${Math.abs(value)} BBY`;
+  }
+
+  return `${value} ABY`;
 }
 
-async function swapiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(buildUrl(path), {
+async function starWarsFetch(): Promise<Character[]> {
+  const response = await fetch(STAR_WARS_API_URL, {
     next: { revalidate: 3600 },
   });
 
   if (!response.ok) {
-    throw new Error(`SWAPI request failed: ${response.status} ${response.statusText}`);
+    throw new Error(`Star Wars API request failed: ${response.status} ${response.statusText}`);
   }
 
-  return (await response.json()) as T;
+  return (await response.json()) as Character[];
 }
 
-export function getCharacterIdFromUrl(url: string): string | null {
-  const match = url.match(/\/people\/(\d+)$/);
-  return match?.[1] ?? null;
+export async function getCharacters(): Promise<Character[]> {
+  return starWarsFetch();
 }
 
-export async function getCharacters(): Promise<SwapiCharacter[]> {
-  return swapiFetch<SwapiCharacter[]>("/people");
-}
+export async function getCharacterById(id: string): Promise<Character | null> {
+  const parsedId = Number.parseInt(id, 10);
 
-export async function getCharacterById(id: string): Promise<SwapiCharacter | null> {
-  const response = await fetch(buildUrl(`/people/${id}`), {
-    next: { revalidate: 3600 },
-  });
-
-  if (response.status === 404) {
+  if (Number.isNaN(parsedId)) {
     return null;
   }
 
-  if (!response.ok) {
-    throw new Error(`SWAPI request failed: ${response.status} ${response.statusText}`);
-  }
+  const characters = await starWarsFetch();
+  const character = characters.find((item) => item.id === parsedId);
 
-  return (await response.json()) as SwapiCharacter;
+  return character ?? null;
 }
