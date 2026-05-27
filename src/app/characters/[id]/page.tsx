@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getCharacterById, toBirthYear } from "@/data/swapi";
+import CharacterImage from "@/app/components/CharacterImage";
 
 type CharacterDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -30,21 +30,17 @@ export default async function CharacterDetailPage({ params }: CharacterDetailPag
           </h1>
         </header>
 
-        {character.image ? (
-          <section className="mx-auto flex w-full max-w-md flex-col items-center justify-center">
-            <div className="overflow-hidden rounded-2xl border-4 border-[#1f8dff]/70 bg-[#0a0f1f] w-full aspect-square max-w-md flex items-center justify-center shadow-[0_0_28px_rgba(31,141,255,0.35)]">
-              <Image
-                src={character.image}
-                alt={character.name}
-                width={320}
-                height={320}
-                className="object-cover object-top w-full h-full"
-                style={{ objectPosition: "top center" }}
-                priority
-              />
-            </div>
-          </section>
-        ) : null}
+        <section className="mx-auto flex w-full max-w-md flex-col items-center justify-center">
+          <CharacterImage
+            src={character.image}
+            alt={character.name}
+            name={character.name}
+            containerClassName="overflow-hidden rounded-2xl border-4 border-[#1f8dff]/70 bg-[#0a0f1f] w-full aspect-square max-w-md flex items-center justify-center shadow-[0_0_28px_rgba(31,141,255,0.35)]"
+            imageClassName="object-cover object-top w-full h-full"
+            fallbackClassName="w-full h-full flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8]"
+            loading="eager"
+          />
+        </section>
 
         <article className="w-full min-w-0 rounded-3xl border border-[#f5d000]/60 bg-gradient-to-br from-[#090d19] via-[#070a13] to-[#101727] p-5 shadow-[0_0_35px_rgba(0,0,0,0.45)] sm:p-6">
           <dl className="grid gap-2.5 sm:grid-cols-2">

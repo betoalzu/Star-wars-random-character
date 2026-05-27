@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getCharacters } from "@/data/swapi";
 import type { Character } from "@/data/swapi";
+import CharacterImage from "@/app/components/CharacterImage";
 
 const PAGE_SIZE = 12;
 
@@ -141,20 +142,14 @@ export default function CharactersPage() {
               key={character.id}
               className="character-reveal rounded-2xl border-2 border-[#1f8dff]/60 bg-gradient-to-br from-[#090d19] via-[#070a13] to-[#101727] p-3 shadow-[0_0_35px_rgba(0,0,0,0.45)] flex h-[430px] flex-col"
             >
-              <div className="mb-3 h-[320px] overflow-hidden rounded-xl border border-[#f5d000]/50 bg-[#0a0f1f]">
-                {character.image ? (
-                  <img
-                    src={character.image}
-                    alt={character.name}
-                    className="h-full w-full object-cover object-top"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-sm font-semibold uppercase tracking-wider text-[#94a3b8]">
-                    Sin imagen
-                  </div>
-                )}
-              </div>
+              <CharacterImage
+                src={character.image}
+                alt={character.name}
+                name={character.name}
+                containerClassName="mb-3 h-[320px] overflow-hidden rounded-xl border border-[#f5d000]/50 bg-[#0a0f1f]"
+                imageClassName="h-full w-full object-cover object-top"
+                fallbackClassName="flex h-full flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8]"
+              />
               <h2 className="text-lg font-bold text-[#f5d000] text-center uppercase tracking-wide">{character.name}</h2>
               <Link
                 href={`/characters/${character.id}`}
