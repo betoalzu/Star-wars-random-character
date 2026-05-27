@@ -1,43 +1,224 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { Character } from "@/data/swapi";
+
+const STAR_WARS_API_URL = "https://akabab.github.io/starwars-api/api/all.json";
+
+function toBirthYear(value?: number): string {
+  if (typeof value !== "number") {
+    return "unknown";
+  }
+
+  if (value < 0) {
+    return `${Math.abs(value)} BBY`;
+  }
+
+  return `${value} ABY`;
+}
+
+function getRandomCharacter(characters: Character[]): Character | null {
+  if (characters.length === 0) {
+    return null;
+  }
+
+  const randomIndex = Math.floor(Math.random() * characters.length);
+  return characters[randomIndex] ?? null;
+}
 
 export default function Home() {
+  const router = useRouter();
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const [failedImageIds, setFailedImageIds] = useState<Set<number>>(new Set());
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCharacters() {
+      setIsLoading(true);
+      setErrorMessage(null);
+
+      try {
+        const response = await fetch(STAR_WARS_API_URL);
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = (await response.json()) as Character[];
+
+        if (!cancelled) {
+          setCharacters(data);
+          setSelectedCharacter(getRandomCharacter(data));
+        }
+      } catch {
+        if (!cancelled) {
+          setErrorMessage("No se pudieron cargar los personajes de Star Wars.");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadCharacters();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleGenerateCharacter = () => {
+    setSelectedCharacter(getRandomCharacter(characters));
+  };
+
+  const characterStats = useMemo(() => {
+    if (!selectedCharacter) {
+      return [];
+    }
+
+    return [
+      { label: "Genero", value: selectedCharacter.gender ?? "unknown" },
+      { label: "Especie", value: selectedCharacter.species ?? "unknown" },
+      {
+        label: "Afiliaciones",
+        value:
+          selectedCharacter.affiliations && selectedCharacter.affiliations.length > 0
+            ? selectedCharacter.affiliations.join(", ")
+            : "unknown",
+      },
+      { label: "Planeta", value: selectedCharacter.homeworld ?? "unknown" },
+      { label: "Altura", value: selectedCharacter.height ? `${selectedCharacter.height} cm` : "unknown" },
+      { label: "Peso", value: selectedCharacter.mass ? `${selectedCharacter.mass} kg` : "unknown" },
+      { label: "Ojos", value: selectedCharacter.eyeColor ?? "unknown" },
+      { label: "Cabello", value: selectedCharacter.hairColor ?? "unknown" },
+      { label: "Piel", value: selectedCharacter.skinColor ?? "unknown" },
+      { label: "Nacimiento", value: toBirthYear(selectedCharacter.born) },
+    ];
+  }, [selectedCharacter]);
+
+  const canShowImage =
+    !!selectedCharacter?.image &&
+    !failedImageIds.has(selectedCharacter.id);
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-16 md:px-10">
-      <header className="space-y-3">
-        <p className="inline-flex rounded-full border border-cyan-700/30 bg-cyan-950/10 px-3 py-1 text-sm text-cyan-700">
-          Next.js + TypeScript + Tailwind
-        </p>
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          Enrutamiento con App Router listo para escalar
-        </h1>
-        <p className="max-w-2xl text-lg text-slate-700">
-          Esta base incluye rutas estaticas y dinamicas para que puedas
-          conectarlas a tu API cuando lo necesites.
-        </p>
-      </header>
+    <main className="relative min-h-screen overflow-hidden bg-[#05070d] px-6 py-14 text-[#f5d000] md:px-10">
+      <div className="pointer-events-none absolute -left-20 top-16 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(0,132,255,0.45),_transparent_70%)]" />
+      <div className="pointer-events-none absolute -right-24 bottom-12 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(255,36,36,0.45),_transparent_70%)]" />
 
-      <section className="grid gap-4 sm:grid-cols-1">
-        <Link
-          href="/characters"
-          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-        >
-          <h2 className="text-xl font-semibold">Characters</h2>
-          <p className="mt-2 text-slate-600">
-            Ruta de listado: /characters. Desde ahi navegas a /characters/[id]
-            para el detalle.
+      <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-8">
+        <header className="space-y-4 text-center">
+          <p className="inline-flex rounded-full border border-[#f5d000]/70 bg-[#0a0d18] px-4 py-1 text-sm tracking-[0.2em] text-[#f5d000]">
+            STAR WARS DATABASE
           </p>
-        </Link>
+          <h1 className="text-4xl font-extrabold uppercase tracking-[0.18em] text-[#f5d000] sm:text-5xl">
+            Generador Aleatorio de Personajes
+          </h1>
+          <p className="mx-auto max-w-2xl text-base text-[#e5e7eb] sm:text-lg">
+            Presiona el boton para revelar un personaje al azar de la galaxia.
+          </p>
+        </header>
+
+        <div className="w-full min-w-0 space-y-4">
+          <div className="rounded-2xl border border-[#1f2937]/90 bg-[#05070d]/90 p-3">
+            <button
+              type="button"
+              onClick={() => router.push("/characters")}
+              className="w-full rounded-2xl border border-[#1f8dff] bg-[#0b1226] px-6 py-3 text-base font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:shadow-[0_0_28px_rgba(31,141,255,0.55)] disabled:cursor-not-allowed disabled:opacity-55"
+            >
+              Buscar Personaje Manualmente
+            </button>
+          </div>
+
+            <div className="flex flex-col items-center gap-3 pt-1">
+              <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#cbd5e1]">o</span>
+              <button
+                type="button"
+                onClick={handleGenerateCharacter}
+                disabled={isLoading || characters.length === 0}
+                className="w-full rounded-2xl border-2 border-[#f5d000] bg-[#090b14] px-6 py-4 text-lg font-bold uppercase tracking-[0.15em] text-[#f5d000] shadow-[0_0_20px_rgba(245,208,0,0.35)] transition hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(245,208,0,0.55)] disabled:cursor-not-allowed disabled:opacity-55"
+              >
+                Generar Personaje
+              </button>
+            </div>
+
+            <article className="w-full min-w-0 rounded-3xl border border-[#f5d000]/60 bg-gradient-to-br from-[#090d19] via-[#070a13] to-[#101727] p-5 shadow-[0_0_35px_rgba(0,0,0,0.45)] sm:p-6">
+          {isLoading ? (
+            <p className="text-center text-lg text-[#f8fafc]">Cargando personajes...</p>
+          ) : null}
+
+          {!isLoading && errorMessage ? (
+            <p className="text-center text-lg text-[#fca5a5]">{errorMessage}</p>
+          ) : null}
+
+          {!isLoading && !errorMessage && !selectedCharacter ? (
+            <p className="text-center text-lg text-[#f8fafc]">
+              No hay personaje disponible en este momento.
+            </p>
+          ) : null}
+
+          {!isLoading && !errorMessage && selectedCharacter ? (
+            <div
+              key={selectedCharacter.id}
+              className="character-reveal grid items-start gap-5 md:grid-cols-[190px_1fr]"
+            >
+              <div className="overflow-hidden rounded-2xl border border-[#1f8dff]/70 bg-[#0a0f1f]">
+                <>
+                  <img
+                    src={selectedCharacter.image}
+                    alt={selectedCharacter.name}
+                    className={
+                      canShowImage
+                        ? "block h-64 w-full object-cover md:h-72"
+                        : "hidden"
+                    }
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    onError={() => {
+                      setFailedImageIds((prev) => {
+                        const next = new Set(prev);
+                        next.add(selectedCharacter.id);
+                        return next;
+                      });
+                    }}
+                  />
+                  {!canShowImage && (
+                    <div className="flex h-64 flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8] md:h-72">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#f87171" className="h-10 w-10 mb-1">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0 3.75h.008v-.008H12v.008zm9.53-2.28a9 9 0 11-15.06 0A9 9 0 0121.53 14.22z" />
+                      </svg>
+                      <span className="text-base font-semibold text-[#f87171]">Imagen no disponible</span>
+                      <span className="text-sm text-[#f5d000] mt-1">{selectedCharacter.name}</span>
+                    </div>
+                  )}
+                </>
+              </div>
+
+              <div>
+                <h2 className="mb-3 text-3xl font-bold text-[#f5d000]">{selectedCharacter.name}</h2>
+                <div className="grid gap-2.5 sm:grid-cols-2">
+                  {characterStats.map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-xl border border-[#ff3b3b]/45 bg-[#0a1020] p-2.5"
+                    >
+                      <p className="text-xs uppercase tracking-[0.12em] text-[#93c5fd]">{item.label}</p>
+                      <p className="mt-1 text-base text-[#f8fafc]">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : null}
+            </article>
+        </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h3 className="text-lg font-semibold">Mapa de rutas</h3>
-        <pre className="mt-3 overflow-x-auto rounded-xl bg-slate-950 p-4 text-sm text-slate-100">
-{`/
-├─ /characters
-│  └─ /characters/[id]
-└─ /not-found`}
-        </pre>
-      </section>
     </main>
   );
 }
