@@ -1,32 +1,44 @@
 import Link from "next/link";
+import { getCharacterIdFromUrl, getCharacters } from "@/data/swapi";
 
-export default function CharactersPage() {
+export default async function CharactersPage() {
+  const characters = await getCharacters();
+
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-16 md:px-10">
       <header>
         <h1 className="text-3xl font-bold tracking-tight">Characters</h1>
         <p className="mt-2 text-slate-700">
-          Esta ruta ya no usa data local. Aqui puedes conectar tu API para
-          listar personajes de forma real.
+          Listado consumido desde SWAPI: https://swapi.info/api/people
         </p>
       </header>
 
-      <section className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-slate-700 shadow-sm">
-        <p>
-          Ejemplo de endpoint esperado:
-          <span className="ml-2 rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-800">
-            GET /api/characters
-          </span>
-        </p>
-        <p className="mt-3">
-          Mientras conectas la API, puedes probar la ruta dinamica directamente.
-        </p>
-        <Link
-          href="/characters/demo-id"
-          className="mt-4 inline-flex w-fit rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
-        >
-          Probar /characters/demo-id
-        </Link>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {characters.map((character) => {
+          const id = getCharacterIdFromUrl(character.url);
+
+          return (
+            <article
+              key={character.url}
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <h2 className="text-lg font-semibold text-slate-900">{character.name}</h2>
+              <p className="mt-2 text-sm text-slate-700">Genero: {character.gender}</p>
+              <p className="text-sm text-slate-700">Nacimiento: {character.birth_year}</p>
+
+              {id ? (
+                <Link
+                  href={`/characters/${id}`}
+                  className="mt-4 inline-flex w-fit rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
+                >
+                  Ver detalle
+                </Link>
+              ) : (
+                <p className="mt-4 text-sm text-amber-700">Sin detalle disponible</p>
+              )}
+            </article>
+          );
+        })}
       </section>
 
       <Link
