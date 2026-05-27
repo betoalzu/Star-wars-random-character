@@ -65,31 +65,29 @@ export default function CharactersPage() {
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  useEffect(() => { setPage(1); }, [search, species, affiliation]);
-
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#05070d] px-6 py-14 text-[#f5d000] md:px-10">
+    <main className="relative min-h-screen overflow-hidden bg-[#05070d] px-4 py-10 text-[#f5d000] sm:px-6 sm:py-12 lg:px-10 lg:py-14">
       <div className="pointer-events-none absolute -left-20 top-16 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(0,132,255,0.45),_transparent_70%)]" />
       <div className="pointer-events-none absolute -right-24 bottom-12 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(255,36,36,0.45),_transparent_70%)]" />
 
-      <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-8">
+      <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 sm:gap-8">
         <div className="flex justify-start">
           <Link
             href="/"
-            className="inline-flex w-fit rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-sm font-semibold uppercase tracking-wider text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:text-[#f5d000]"
+            className="inline-flex w-full justify-center rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-sm font-semibold uppercase tracking-wider text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:text-[#f5d000] sm:w-fit"
           >
             Volver al inicio
           </Link>
         </div>
 
-        <header className="space-y-4 text-center">
-          <p className="inline-flex rounded-full border border-[#f5d000]/70 bg-[#0a0d18] px-4 py-1 text-sm tracking-[0.2em] text-[#f5d000]">
+        <header className="space-y-3 text-center sm:space-y-4">
+          <p className="inline-flex rounded-full border border-[#f5d000]/70 bg-[#0a0d18] px-3 py-1 text-xs tracking-[0.2em] text-[#f5d000] sm:px-4 sm:text-sm">
             STAR WARS DATABASE
           </p>
-          <h1 className="text-4xl font-extrabold uppercase tracking-[0.18em] text-[#f5d000] sm:text-5xl">
+          <h1 className="text-3xl font-extrabold uppercase tracking-[0.14em] text-[#f5d000] sm:text-4xl sm:tracking-[0.16em] md:text-5xl md:tracking-[0.18em]">
             Buscador de Personajes
           </h1>
-          <p className="mx-auto max-w-2xl text-base text-[#e5e7eb] sm:text-lg">
+          <p className="mx-auto max-w-2xl text-sm text-[#e5e7eb] sm:text-base md:text-lg">
             Filtra y explora personajes de la galaxia.
           </p>
         </header>
@@ -100,14 +98,20 @@ export default function CharactersPage() {
             type="text"
             placeholder="Buscar personaje..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full max-w-md rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-lg text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] focus:border-[#f5d000] focus:outline-none"
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            className="w-full max-w-md rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-base text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] focus:border-[#f5d000] focus:outline-none sm:text-lg"
           />
-          <div className="flex flex-wrap gap-4 justify-center w-full">
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4">
             <select
               value={species}
-              onChange={(e) => setSpecies(e.target.value)}
-              className="rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-base text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] focus:border-[#f5d000] focus:outline-none"
+              onChange={(e) => {
+                setSpecies(e.target.value);
+                setPage(1);
+              }}
+              className="w-full rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-base text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] focus:border-[#f5d000] focus:outline-none sm:w-auto"
             >
               <option value="">Todas las especies</option>
               {speciesOptions.map((s) => (
@@ -116,8 +120,11 @@ export default function CharactersPage() {
             </select>
             <select
               value={affiliation}
-              onChange={(e) => setAffiliation(e.target.value)}
-              className="rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-base text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] focus:border-[#f5d000] focus:outline-none"
+              onChange={(e) => {
+                setAffiliation(e.target.value);
+                setPage(1);
+              }}
+              className="w-full rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-base text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] focus:border-[#f5d000] focus:outline-none sm:w-auto"
             >
               <option value="">Todas las afiliaciones</option>
               {affiliationOptions.map((a) => (
@@ -128,7 +135,7 @@ export default function CharactersPage() {
               type="button"
               onClick={clearFilters}
               disabled={!hasActiveFilters}
-              className="rounded-xl border-2 border-[#ff3b3b] bg-[#2a1010] px-4 py-2 text-base font-semibold uppercase tracking-wider text-[#fecaca] transition hover:bg-[#3a1515] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-xl border-2 border-[#ff3b3b] bg-[#2a1010] px-4 py-2 text-base font-semibold uppercase tracking-wider text-[#fecaca] transition hover:bg-[#3a1515] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               Borrar filtros
             </button>
@@ -136,18 +143,18 @@ export default function CharactersPage() {
         </div>
 
         {/* Resultados */}
-        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {paginated.map((character) => (
             <article
               key={character.id}
-              className="character-reveal rounded-2xl border-2 border-[#1f8dff]/60 bg-gradient-to-br from-[#090d19] via-[#070a13] to-[#101727] p-3 shadow-[0_0_35px_rgba(0,0,0,0.45)] flex h-[430px] flex-col"
+              className="character-reveal flex h-[390px] flex-col rounded-2xl border-2 border-[#1f8dff]/60 bg-gradient-to-br from-[#090d19] via-[#070a13] to-[#101727] p-3 shadow-[0_0_35px_rgba(0,0,0,0.45)] sm:h-[430px]"
             >
               <CharacterImage
                 src={character.image}
                 alt={character.name}
                 name={character.name}
-                containerClassName="mb-3 h-[320px] overflow-hidden rounded-xl border border-[#f5d000]/50 bg-[#0a0f1f]"
-                imageClassName="h-full w-full object-cover object-top"
+                containerClassName="mb-3 h-[280px] overflow-hidden rounded-xl border border-[#f5d000]/50 bg-[#0a0f1f] sm:h-[320px]"
+                imageClassName="h-full w-full object-contain object-top p-2 sm:object-cover sm:p-0"
                 fallbackClassName="flex h-full flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8]"
               />
               <h2 className="text-lg font-bold text-[#f5d000] text-center uppercase tracking-wide">{character.name}</h2>
@@ -163,7 +170,7 @@ export default function CharactersPage() {
 
         {/* Paginación */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-4">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
             <button
               onClick={() => changePage(Math.max(1, page - 1))}
               disabled={page === 1}
