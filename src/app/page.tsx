@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Character } from "@/data/swapi";
+import CharacterImage from "./components/CharacterImage";
 
 const STAR_WARS_API_URL = "https://akabab.github.io/starwars-api/api/all.json";
 
@@ -31,7 +32,6 @@ export default function Home() {
   const router = useRouter();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
-  const [failedImageIds, setFailedImageIds] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -102,9 +102,6 @@ export default function Home() {
     ];
   }, [selectedCharacter]);
 
-  const canShowImage =
-    !!selectedCharacter?.image &&
-    !failedImageIds.has(selectedCharacter.id);
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070d] px-6 py-14 text-[#f5d000] md:px-10">
       <div className="pointer-events-none absolute -left-20 top-16 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(0,132,255,0.45),_transparent_70%)]" />
@@ -166,38 +163,14 @@ export default function Home() {
               key={selectedCharacter.id}
               className="character-reveal grid items-start gap-5 md:grid-cols-[190px_1fr]"
             >
-              <div className="overflow-hidden rounded-2xl border border-[#1f8dff]/70 bg-[#0a0f1f]">
-                <>
-                  <img
-                    src={selectedCharacter.image}
-                    alt={selectedCharacter.name}
-                    className={
-                      canShowImage
-                        ? "block h-64 w-full object-cover md:h-72"
-                        : "hidden"
-                    }
-                    loading="lazy"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                    onError={() => {
-                      setFailedImageIds((prev) => {
-                        const next = new Set(prev);
-                        next.add(selectedCharacter.id);
-                        return next;
-                      });
-                    }}
-                  />
-                  {!canShowImage && (
-                    <div className="flex h-64 flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8] md:h-72">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#f87171" className="h-10 w-10 mb-1">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0 3.75h.008v-.008H12v.008zm9.53-2.28a9 9 0 11-15.06 0A9 9 0 0121.53 14.22z" />
-                      </svg>
-                      <span className="text-base font-semibold text-[#f87171]">Imagen no disponible</span>
-                      <span className="text-sm text-[#f5d000] mt-1">{selectedCharacter.name}</span>
-                    </div>
-                  )}
-                </>
-              </div>
+              <CharacterImage
+                src={selectedCharacter.image}
+                alt={selectedCharacter.name}
+                name={selectedCharacter.name}
+                containerClassName="overflow-hidden rounded-2xl border border-[#1f8dff]/70 bg-[#0a0f1f]"
+                imageClassName="block h-64 w-full object-cover md:h-72"
+                fallbackClassName="flex h-64 flex-col items-center justify-center gap-2 bg-gradient-to-b from-[#10213f] to-[#070d1f] text-[#94a3b8] md:h-72"
+              />
 
               <div>
                 <h2 className="mb-3 text-3xl font-bold text-[#f5d000]">{selectedCharacter.name}</h2>
