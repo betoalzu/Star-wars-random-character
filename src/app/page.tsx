@@ -212,6 +212,21 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+                {selectedCharacter?.wiki && (
+                  <div className="flex justify-end mt-4">
+                    <a
+                      href={selectedCharacter.wiki}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.35)] transition hover:border-[#ff3b3b] hover:bg-[#121a35]"
+                    >
+                      Ver en Wiki
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75h-10.5m10.5 0v10.5m0-10.5L6.75 17.25" />
+                      </svg>
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           ) : null}

@@ -72,6 +72,15 @@ export default function CharactersPage() {
       <div className="pointer-events-none absolute -right-24 bottom-12 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(255,36,36,0.45),_transparent_70%)]" />
 
       <section className="relative mx-auto flex w-full max-w-6xl flex-col gap-8">
+        <div className="flex justify-start">
+          <Link
+            href="/"
+            className="inline-flex w-fit rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-sm font-semibold uppercase tracking-wider text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:text-[#f5d000]"
+          >
+            Volver al inicio
+          </Link>
+        </div>
+
         <header className="space-y-4 text-center">
           <p className="inline-flex rounded-full border border-[#f5d000]/70 bg-[#0a0d18] px-4 py-1 text-sm tracking-[0.2em] text-[#f5d000]">
             STAR WARS DATABASE
@@ -177,13 +186,6 @@ export default function CharactersPage() {
             </button>
           </div>
         )}
-
-        <Link
-          href="/"
-          className="inline-flex w-fit rounded-xl border-2 border-[#1f8dff] bg-[#0b1226] px-4 py-2 text-sm font-semibold uppercase tracking-wider text-[#dbeafe] shadow-[0_0_20px_rgba(31,141,255,0.15)] transition hover:border-[#ff3b3b] hover:bg-[#121a35] hover:text-[#f5d000] mt-8"
-        >
-          Volver al inicio
-        </Link>
       </section>
     </main>
   );
